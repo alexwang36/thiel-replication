@@ -2,6 +2,7 @@ import re
 import csv
 import os
 import pandas as pd
+import decimal
  
 lmdict = {'Negative': ['abandon', 'abandoned', 'abandoning', 'abandonment', 'abandonments', 'abandons', 'abdicated',
                        'abdicates', 'abdicating', 'abdication', 'abdications', 'aberrant', 'aberration', 'aberrational',
@@ -404,7 +405,47 @@ lmdict = {'Negative': ['abandon', 'abandoned', 'abandoning', 'abandonment', 'aba
                        'successfully', 'superior', 'surpass', 'surpassed', 'surpasses', 'surpassing', 'transparency',
                        'tremendous', 'tremendously', 'unmatched', 'unparalleled', 'unsurpassed', 'upturn', 'upturns',
                        'valuable', 'versatile', 'versatility', 'vibrancy', 'vibrant', 'win', 'winner', 'winners',
-                       'winning', 'worthy']}
+                       'winning', 'worthy'],
+          'uncertainty': ['aardvark', 'aardvarks', 'abaci', 'aback', 'abacus', 'abacuses', 'abaft', 'abalone', 'abalones', 'abandon', 
+               'abandoned', 'abandoning', 'abandonment', 'abandonments', 'abandons', 'abase', 'abased', 'abasement', 'abasements', 
+               'abases', 'abash', 'abashed', 'abashedly', 'abashes', 'abashing', 'abashment', 'abashments', 'abasing', 'abate', 
+               'abated', 'abatement', 'abatements', 'abates', 'abating', 'abattoir', 'abattoirs', 'abbe', 'abbes', 'abbess', 
+               'abbesses', 'abbey', 'abbeys', 'abbot', 'abbots', 'abbreviate', 'abbreviated', 'abbreviates', 'abbreviating', 
+               'abbreviation', 'abbreviations', 'abdicate', 'abdicated', 'abdicates', 'abdicating', 'abdication', 'abdications', 
+               'abdomen', 'abdomens', 'abdominal', 'abdominals', 'abduct', 'abducted', 'abducting', 'abduction', 'abductions', 
+               'abductor', 'abductors', 'abducts', 'abeam', 'abed', 'aberrant', 'aberration', 'aberrational', 'aberrations', 'abet', 
+               'abets', 'abetted', 'abetter', 'abetters', 'abetting', 'abettor', 'abettors', 'abeyance', 'abeyances', 'abhor', 
+               'abhorred', 'abhorrence', 'abhorrences', 'abhorrent', 'abhorrently', 'abhorring', 'abhors', 'abidance', 'abidances', 
+               'abide', 'abided', 'abides', 'abiding', 'abidingly', 'abilities', 'ability', 'abject', 'abjection', 'abjections', 
+               'abjectly', 'abjectness', 'abjectnesses', 'abjuration', 'abjurations', 'abjuratory', 'abjure', 'abjured', 'abjurer', 
+               'abjurers', 'abjures', 'abjuring', 'ablate', 'ablated', 'ablates', 'ablating', 'ablation', 'ablations', 'ablative', 
+               'ablatives', 'ablaze', 'able', 'abler', 'ablest', 'abloom', 'ablution', 'ablutions', 'ably', 'abnegate', 'abnegated', 
+               'abnegates', 'abnegating', 'abnegation', 'abnegations', 'abnormal', 'abnormalities', 'abnormality', 'abnormally', 
+               'aboard', 'abode', 'abodes', 'abolish', 'abolished', 'abolishes', 'abolishing', 'abolishment', 'abolition', 
+               'abolitionism', 'abolitionisms', 'abolitionist', 'abolitionists', 'abolitions', 'abominable', 'abominably', 
+               'abominate', 'abominated', 'abominates', 'abominating', 'abomination', 'abominations', 'aboriginal', 'aboriginals', 
+               'aborigine', 'aborigines', 'aborning', 'abort', 'aborted', 'aborting', 'abortion', 'abortionist', 'abortionists', 
+               'abortions', 'abortive', 'abortively', 'aborts', 'abound', 'abounded', 'abounding', 'abounds', 'about', 'abouts', 
+               'above', 'aboveboard', 'aboveground', 'abovementioned', 'aboves', 'abracadabra', 'abracadabras', 'abrade', 'abraded', 
+               'abrades', 'abrading', 'abrasion', 'abrasions', 'abrasive', 'abrasively', 'abrasiveness', 'abrasivenesses', 'abrasives', 
+               'abreast', 'abridge', 'abridged', 'abridgement', 'abridgements', 'abridges', 'abridging', 'abridgment', 'abridgments', 
+               'abroad', 'abrogate', 'abrogated', 'abrogates', 'abrogating', 'abrogation', 'abrogations', 'abrogator', 'abrogators', 
+               'abrupt', 'abrupter', 'abruptest', 'abruptly', 'abruptness', 'abruptnesses', 'abs', 'abscess', 'abscessed', 'abscesses', 
+               'abscessing', 'abscissa', 'abscissae', 'abscissas', 'abscission', 'abscissions', 'abscond', 'absconded', 'absconder', 
+               'absconders', 'absconding', 'absconds', 'abseil', 'abseiled', 'abseiling', 'abseils', 'absence', 'absences', 'absent', 
+               'absented', 'absentee', 'absenteeism', 'absenteeisms', 'absentees', 'absenting', 'absently', 'absentminded', 
+               'absentmindedly', 'absentmindedness', 'absentmindednesses', 'absents', 'absinth', 'absinthe', 'absinthes', 'absinths', 
+               'absolute', 'absolutely', 'absoluteness', 'absolutenesses', 'absolutes', 'absolutest', 'absolution', 'absolutions', 
+               'absolutism', 'absolutisms', 'absolutist', 'absolutists', 'absolve', 'absolved', 'absolves', 'absolving', 'absorb', 
+               'absorbable', 'absorbed', 'absorbencies', 'absorbency', 'absorbent', 'absorbents', 'absorber', 'absorbers', 'absorbing', 
+               'absorbingly', 'absorbs', 'absorption', 'absorptions', 'absorptive'],
+          'strong_modal': ['always', 'best', 'clearly', 'definitely', 'definitively', 'highest', 'lowest', 'must', 'never', 'strongly',
+                'unambiguously', 'uncompromising', 'undisputed', 'undoubtedly', 'unequivocal', 'unequivocally', 'unparalleled', 
+                'unsurpassed', 'will'],
+          'weak_modal': ['almost', 'apparently', 'appeared', 'appearing', 'appears', 'conceivable', 'could', 'depend', 'depended', 'depending', 
+              'depends', 'may', 'maybe', 'might', 'nearly', 'occasionally', 'perhaps', 'possible', 'possibly', 'seldom', 'seldomly', 
+              'sometimes', 'somewhat', 'suggest', 'suggests', 'uncertain', 'uncertainly', 'always']}     
+
 
 
 # Borrowing negate words list from Kai Chen based from this website: http://kaichen.work/?p=399 
@@ -414,6 +455,8 @@ negate = ["aint", "arent", "cannot", "cant", "couldnt", "darent", "didnt", "does
           "never", "none", "nope", "nor", "not", "nothing", "nowhere", "oughtnt", "shant", "shouldnt", "wasnt",
           "werent", "oughtn't", "shan't", "shouldn't", "wasn't", "weren't", "without", "wont", "wouldnt", "won't",
           "wouldn't", "rarely", "seldom", "despite", "no", "nobody"]
+
+
  
  
 def negated(word):
@@ -433,134 +476,82 @@ def tone_count_with_negation_check(dict, article):
     """
     pos_count = 0
     neg_count = 0
+    uncertainty_count = 0
+    strong_modal_count = 0
+    weak_modal_count = 0
  
-    pos_words = []
-    neg_words = []
+    #pos_words = []
+    #neg_words = []
  
     input_words = re.findall(r'\b([a-zA-Z]+n\'t|[a-zA-Z]+\'s|[a-zA-Z]+)\b', article.lower())
- 
     word_count = len(input_words)
+
+    sentences = re.split(r'[.!?]+', article.lower())
+    sentences = [s.strip() for s in sentences if s.strip()]
+    sentence_count = len(sentences)
  
     for i in range(0, word_count):
         if input_words[i] in dict['Negative']:
             neg_count += 1
-            neg_words.append(input_words[i])
+            #neg_words.append(input_words[i])
+
+        if input_words[i] in dict['uncertainty']:
+            uncertainty_count += 1
+        
+        if input_words[i] in dict['strong_modal']:
+            strong_modal_count += 1
+
+        if input_words[i] in dict['weak_modal']:
+            weak_modal_count += 1       
+
         if input_words[i] in dict['Positive']:
             if i >= 3:
                 if negated(input_words[i - 1]) or negated(input_words[i - 2]) or negated(input_words[i - 3]):
                     neg_count += 1
-                    neg_words.append(input_words[i] + ' (with negation)')
                 else:
                     pos_count += 1
-                    pos_words.append(input_words[i])
             elif i == 2:
                 if negated(input_words[i - 1]) or negated(input_words[i - 2]):
                     neg_count += 1
-                    neg_words.append(input_words[i] + ' (with negation)')
                 else:
                     pos_count += 1
-                    pos_words.append(input_words[i])
             elif i == 1:
                 if negated(input_words[i - 1]):
                     neg_count += 1
-                    neg_words.append(input_words[i] + ' (with negation)')
                 else:
                     pos_count += 1
-                    pos_words.append(input_words[i])
             elif i == 0:
                 pos_count += 1
-                pos_words.append(input_words[i])
  
-    #print('The results with negation check:', end='\n\n')
-    #print('The # of positive words:', pos_count)
-    #print('The # of negative words:', neg_count)
-    #print('The list of found positive words:', pos_words)
-    #print('The list of found negative words:', neg_words)
-    #print('\n', end='')
- 
-    #results = [word_count, pos_count, neg_count, pos_words, neg_words]
-    results = [word_count, pos_count, neg_count]
+    decimal.getcontext().prec = 16
+    num_words = decimal.Decimal(word_count)
+
+    #need sentence count too...
+    results = [sentence_count, word_count, decimal.Decimal(strong_modal_count) / num_words, decimal.Decimal(weak_modal_count) / num_words, 
+               decimal.Decimal(uncertainty_count) / num_words, decimal.Decimal(pos_count) / num_words, decimal.Decimal(neg_count) / num_words]
  
     return results
 
 
-folder_path = 'C:/Users/awang/Downloads/Earnings-Calls-NLP-main/Earnings-Calls-NLP-main/transcripts/sandp500'
-#folder_path = 'C:/Users/awang/Downloads/fake'
-transcripts_results = []
+q_a_pairs_file_location = 'C:/Users/awang/theil_fnp-20/question-answer.csv'
+labels_df = pd.DataFrame(columns=['question_sent_count', 'question_tok_count', 'question_modality_strong', 'question_modality_weak', 'question_uncertainty', 'question_positive', 'question_negative'])
 
 
+with open(q_a_pairs_file_location, 'r', encoding='utf-8') as file:
+    csv_r = csv.reader(file)
+    
+    for row in csv_r:
+        question = row[1]
+        labels_df.loc[len(labels_df)] = tone_count_with_negation_check(lmdict, question)
+        print("done")
 
-questions = []
-answers = []
-transcript = []
+median_weak_modality = labels_df['question_modality_weak'].median()
+labels_df['label'] = (labels_df['question_modality_weak'] > median_weak_modality).astype(int)
+labels_df = labels_df.reindex(columns=['question_sent_count', 'question_tok_count', 'label', 'question_modality_strong', 'question_modality_weak', 'question_uncertainty', 'question_positive', 'question_negative'])
 
-for filename in os.listdir(folder_path):
-    if filename.endswith(".txt"):
-        file_path = os.path.join(folder_path, filename)
-
-        with open(file_path, "r") as file:
-            text = file.readlines()
-
-            operator_flag = False
-            question_flag = False
-            question_asker = ""
-            question = ""
-            
-            for i in range(1, len(text)):
-                line = text[i].strip()
-
-                if line.strip() == "Operator" and "question" in text[i+1].strip():
-                    operator_flag = True
-
-                if "?" in line and operator_flag:
-                    question_asker = text[i-1].strip().split()
-                    print(question_asker)
-                    if len(question_asker) > 1:
-                        if len(question_asker[1]) > 1:
-                            if question_asker[1][0].isupper or question_asker[1][1] == '.':
-                                question_flag = True
-                                operator_flag = False
-                                #print(question_asker)
-                                question = line.strip()
-                
-                words = line.split()
-                if question_flag and len(words) > 1 and len(question_asker) > 1:
-                    if len(words[1]) > 1 and len(question_asker[1]) > 1:
-                        if len(words) < 10 and (words[1][0].isupper() or (len(words[1]) == 2 and words[1][1] == ".")) and (words[0] != question_asker[0] and words[1] != question_asker[1]):
-                            question_flag = False
-                            questions.append(question)
-                            answers.append(text[i+1].strip())
-                            transcript.append(filename)
-
-            #uncomment this later:
-            #transcript_nlp = tone_count_with_negation_check(lmdict, text)
+labels_df.to_csv('C:/Users/awang/theil_fnp-20/surface_features.csv')
 
 
-            #transcript_result = [filename] + transcript_nlp
-            #transcripts_results.append(transcript_result)
+print(labels_df)
 
-            #uncomment this later:
-            #transcripts_results.append(transcript_nlp)
-
-#df = pd.DataFrame(transcripts_results)
-#pd.set_option('display.max_colwidth', None)
-#df.columns = ['name transcript', 'word_count', 'pos_words', 'neg_words']
-#df.columns = ['word_count', 'pos_words', 'neg_words']
-
-print(len(questions))
-print(len(answers))
-
-for i in range(1, len(answers)):
-    print("question: ")
-    print(questions[i])
-    print("\n")
-    print("answer: ")
-    print(answers[i])
-    print("\n")
-
-print(answers)
-print(len(answers))
-df = pd.DataFrame({'Questions': questions, 'Answers': answers, 'Transcript File': transcript})
-
-df.to_csv('C:/Users/awang/theil_fnp-20/question-answer.csv')
 
